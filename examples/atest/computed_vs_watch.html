@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <title>computed vs watch</title>
+  <style>
+    .container {
+      margin: 10px auto;
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <h3>computed vs watch</h3>
+  <div>
+    当计算属性的依赖更新时，计算属性同步更新
+  </div>
+  <div>
+    相反，监听器监听的依赖更新时，监听处理函数是异步触发的
+  </div>
+  <div class="container">
+    <div>num1: {{num1}}</div>
+    <button @click="increaseNum1">increaseNum1</button>
+  </div>
+</div>
+<script src="../../dist/vue.js"></script>
+<script>
+  new Vue({
+    el: '#app',
+    data () {
+      return {
+        num1: 0,
+        watchRst: 0
+      }
+    },
+    computed: {
+      computedRst () {
+        return this.num1
+      }
+    },
+    methods: {
+      increaseNum1 () {
+        this.num1++
+        console.log('此时计算属性更新了，用监听器监听的结果还没更新')
+        const computed = this.computedRst
+        const watch = this.watchRst
+        console.log({computed, watch})
+        setTimeout(() => {
+          console.log('此时监听器监听的结果才是新的')
+          const computed = this.computedRst
+          const watch = this.watchRst
+          console.log({computed, watch})
+        })
+      }
+    },
+    watch: {
+      num1 (newVal) {
+        this.watchRst = newVal
+      }
+    }
+  })
+</script>
+</body>
+</html>

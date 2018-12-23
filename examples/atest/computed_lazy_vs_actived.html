@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <title>computed vs watch</title>
+  <style>
+    .container {
+      margin: 10px auto;
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <h3>computed vs watch</h3>
+  <div>
+    当计算属性没有被其他（如别的计算属性或者渲染函数）依赖时，为默认的lazy模式。此模式下
+    计算属性的依赖有变化时，计算属性只会标记为dirty，等到有被其他地方使用时再实时evaluate()
+    出值
+  </div>
+  <div>
+    相反，计算属性有被其他依赖时，则为activated模式。此模式下
+    计算属性的依赖有变化时，马上实时getAndInvoke()计算出值
+  </div>
+  <div>
+    不过使用过程其实程序员不用关注，是底层细节。
+  </div>
+  <div class="container">
+    <div>num1: {{num1}}</div>
+    <div>com2: {{com2}}</div>
+    <button @click="increaseNum1">increaseNum1</button>
+  </div>
+</div>
+<script src="../../dist/vue.js"></script>
+<script>
+  new Vue({
+    el: '#app',
+    data () {
+      return {
+        num1: 0,
+      }
+    },
+    computed: {
+      // 没有被依赖，lazy模式
+      com1 () {
+        // 点击的时候下面不会输出
+        console.log('此时com1更新了')
+        return this.num1
+      },
+      // 有被依赖，activated模式
+      com2 () {
+        console.log('此时com2更新了')
+        return this.num1
+      },
+    },
+    methods: {
+      increaseNum1 () {
+        this.num1++
+      }
+    },
+    watch: {
+      num1 (newVal) {
+        this.watchRst = newVal
+      }
+    }
+  })
+</script>
+</body>
+</html>
