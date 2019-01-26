@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>vue vs react</title>
+</head>
+<body>
+<!--<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>-->
+<!--<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>-->
+<script src="https://unpkg.com/react@15/dist/react.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@15/dist/react-dom.js" crossorigin></script>
+<div id="app">
+
+</div>
+<!-- Load our React component. -->
+<script>
+  const e = React.createElement;
+  class ChildComp extends React.Component {
+    constructor(props) {
+      super(props);
+    }
+    shouldComponentUpdate(nextProps, nextState) {
+      if (nextProps.text === this.props.text) {
+        return false
+      }
+      return true
+    }
+    render() {
+      console.log('in!')
+      console.log(this.props.text)
+      return e('div', {}, this.props.text);
+    }
+  }
+  class App extends React.Component {
+    constructor (props) {
+      super(props)
+      this.state = {
+        text: 'hello',
+        num1: 0,
+      }
+      this.increaseNum1 = this.increaseNum1.bind(this)
+    }
+    increaseNum1 () {
+      this.setState({
+        num1: this.state.num1+1
+      })
+    }
+
+    render () {
+      // return (
+      //   <div>
+      //     <div>
+      //       {this.state.num1}
+      //     </div>
+      //     <div>
+      //       <child-comp text={this.state.text}/>
+      //     </div>
+      //     <div>
+      //       <button onClick={this.increaseNum1}>increaseNum1</button>
+      //     </div>
+      //   </div>
+      // )
+      return e('div', {}, [
+        e('div', {key:'a'}, this.state.num1),
+        e('div', {key: 'b'}, [
+          e(ChildComp, {key: 'ba', text: this.state.text})
+        ]),
+        e('div', {key: 'c'}, [
+          e('button', {key: 'ca', onClick: this.increaseNum1}, 'increaseNum1')
+        ])
+      ])
+    }
+  }
+
+
+  const domContainer = document.querySelector('#app');
+  ReactDOM.render(e(App), domContainer);
+</script>
+</body>
+</html>

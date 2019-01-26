@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+</head>
+<body>
+<div id="app">
+  <div>
+    {{num1}}
+  </div>
+  <div>
+    <child-comp :text="text"></child-comp>
+  </div>
+  <div>
+    <button @click="increaseNum1">increaseNum1</button>
+  </div>
+</div>
+<script src="../../dist/vue.js"></script>
+<script>
+  // 定义一个名为 button-counter 的新组件
+  Vue.component('child-comp', {
+    name: 'child-comp',
+    props: ['text'],
+    // template: '<span>{{text}}</span>'
+    render (h) {
+      return h('span', {}, this.text)
+    }
+  })
+  new Vue({
+    el: '#app',
+    render (h) {
+      return h('div', {}, [
+        h('div', {}, String(this.num1)),
+        h('div', {}, [
+          h('child-comp', {':text': this.text}, '')
+        ]),
+        h('button', {'@click': this.increaseNum1}, 'increaseNum1')
+      ])
+    },
+    data () {
+      return {
+        text: 'hello',
+        num1: 0,
+      }
+    },
+    methods: {
+      increaseNum1 () {
+        this.num1++
+      },
+    }
+  })
+</script>
+</body>
+</html>
